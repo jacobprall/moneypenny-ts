@@ -1,0 +1,3 @@
+# Brains config
+# deny_by_default = false  # Set true for production
+# data_dir = "./data"
