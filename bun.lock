@@ -8,7 +8,7 @@
         "@ai-sdk/anthropic": "^1.0.0",
         "@modelcontextprotocol/sdk": "^1.28.0",
         "@sqliteai/sqlite-ai": "^1.0.2",
-        "@sqliteai/sqlite-sync": "^0.8.68",
+        "@sqliteai/sqlite-sync": "^1.0.0",
         "ai": "^4.0.0",
         "cron-parser": "^5.5.0",
         "hono": "^4.12.8",
@@ -58,21 +58,21 @@
 
     "@sqliteai/sqlite-ai-win32-x86_64": ["@sqliteai/sqlite-ai-win32-x86_64@1.0.2", "", { "os": "win32", "cpu": [ "x64", "ia32", ] }, "sha512-CeT208oHwUN1U/sBDC/5HWcdc9cgkll2AE3/3Xm247YdGnn63CEueTCz4i19hMtskdEOiQv5m2kJP6nv+tooqw=="],
 
-    "@sqliteai/sqlite-sync": ["@sqliteai/sqlite-sync@0.8.68", "", { "optionalDependencies": { "@sqliteai/sqlite-sync-darwin-arm64": "0.8.68", "@sqliteai/sqlite-sync-darwin-x86_64": "0.8.68", "@sqliteai/sqlite-sync-linux-arm64": "0.8.68", "@sqliteai/sqlite-sync-linux-arm64-musl": "0.8.68", "@sqliteai/sqlite-sync-linux-x86_64": "0.8.68", "@sqliteai/sqlite-sync-linux-x86_64-musl": "0.8.68", "@sqliteai/sqlite-sync-win32-x86_64": "0.8.68" } }, "sha512-7pZpO/0h9xj5LUan1ok3Lbol3DpUx91HSI68cEsSHLU6P5zTeJHx0+5/uHEHvCix3BZPFqaZRDetMvYCw3IKyw=="],
+    "@sqliteai/sqlite-sync": ["@sqliteai/sqlite-sync@1.0.0", "", { "optionalDependencies": { "@sqliteai/sqlite-sync-darwin-arm64": "1.0.0", "@sqliteai/sqlite-sync-darwin-x86_64": "1.0.0", "@sqliteai/sqlite-sync-linux-arm64": "1.0.0", "@sqliteai/sqlite-sync-linux-arm64-musl": "1.0.0", "@sqliteai/sqlite-sync-linux-x86_64": "1.0.0", "@sqliteai/sqlite-sync-linux-x86_64-musl": "1.0.0", "@sqliteai/sqlite-sync-win32-x86_64": "1.0.0" } }, "sha512-4K6s5RaGL9Ozz16mzwzI9h5LcToLmCglvoSFwpkXyud9FHCrCYSnN1Hh2S04Pm3olZuUNBa0kC8vm8+IJkSn0A=="],
 
-    "@sqliteai/sqlite-sync-darwin-arm64": ["@sqliteai/sqlite-sync-darwin-arm64@0.8.68", "", { "os": "darwin", "cpu": "arm64" }, "sha512-DQKnmTM94zlHozn4qdpuw3q7uciay/qy7bLQ6WV1GmZLryXw5orrcBCtZyJkqndr1CY0ZvejHITCL6bKkTiefQ=="],
+    "@sqliteai/sqlite-sync-darwin-arm64": ["@sqliteai/sqlite-sync-darwin-arm64@1.0.0", "", { "os": "darwin", "cpu": "arm64" }, "sha512-79ZVNlvEEPAy0eAEQcUkDs+1NDmaTOm7NqBCG/AApSHqlofgVRpL1EArv58kooZrKBmtwr2QcKHl9nNIHVtWDw=="],
 
-    "@sqliteai/sqlite-sync-darwin-x86_64": ["@sqliteai/sqlite-sync-darwin-x86_64@0.8.68", "", { "os": "darwin", "cpu": [ "x64", "ia32", ] }, "sha512-yGOvXsMDCvbo7F+9mgZTAdjfyJWhpBeCk0yyClccYo0N60CeyrT6Vs/RPIPKUqR/8WnqY/2QvYSHRfnYmsehSA=="],
+    "@sqliteai/sqlite-sync-darwin-x86_64": ["@sqliteai/sqlite-sync-darwin-x86_64@1.0.0", "", { "os": "darwin", "cpu": [ "x64", "ia32", ] }, "sha512-Rl6HSzEIFIXOyZWkYQGcW8jqxUJUVB3tYyGDHNDeCCTnOYv0p8VWF8TScDNHX26btbbzNIVHRDyuQ/bWhUag0w=="],
 
-    "@sqliteai/sqlite-sync-linux-arm64": ["@sqliteai/sqlite-sync-linux-arm64@0.8.68", "", { "os": "linux", "cpu": "arm64" }, "sha512-Iz0WqZAXl702hSkQcBEunfHhENn4U1rnjygaHkZtBMEhofJ7/DKXo+c+t+JjeYymAbze5KA99NhkdUDOZpiq5Q=="],
+    "@sqliteai/sqlite-sync-linux-arm64": ["@sqliteai/sqlite-sync-linux-arm64@1.0.0", "", { "os": "linux", "cpu": "arm64" }, "sha512-GaZd2tX0P0jLKrTOcccUxm4fEEnzRMSGiZ6vwweCjKk3gXys6wNOqvCpXXLISV4w/OHw4AeKP1IxdTXTg2qksQ=="],
 
-    "@sqliteai/sqlite-sync-linux-arm64-musl": ["@sqliteai/sqlite-sync-linux-arm64-musl@0.8.68", "", { "os": "linux", "cpu": "arm64" }, "sha512-H5xjQHZ6q/qj/NsHMAxY09+qjC2J88mULwQ5gMq9sv0n3BXFuBD0DjFMk/mskALzhXW9PcO9dVGRch+iEINy+Q=="],
+    "@sqliteai/sqlite-sync-linux-arm64-musl": ["@sqliteai/sqlite-sync-linux-arm64-musl@1.0.0", "", { "os": "linux", "cpu": "arm64" }, "sha512-KAUWH1DIvSpda4/e/1QZeadvcVI4dp0P+nk9/T5A4CGB6JgxyvGYHVNWaByKb3fEVpG76P4p+I2VKfICJSYHBw=="],
 
-    "@sqliteai/sqlite-sync-linux-x86_64": ["@sqliteai/sqlite-sync-linux-x86_64@0.8.68", "", { "os": "linux", "cpu": [ "x64", "ia32", ] }, "sha512-iv3zpIMTvH/i78sFPVxiyuAuZjnssjFiBShWqp0OU2eXZjWMQhtLCNT+4Lq6fN5iYpHLK/K0ldWhl7z79D57KA=="],
+    "@sqliteai/sqlite-sync-linux-x86_64": ["@sqliteai/sqlite-sync-linux-x86_64@1.0.0", "", { "os": "linux", "cpu": [ "x64", "ia32", ] }, "sha512-ZvPP482v1LdSpTKLu6JpPJFR8xbSZGEF/A43RnXAnUuCdQNIoAwY+PQ2vQj5sxSYkWNNT2AmsS+PzR8yRJsk5Q=="],
 
-    "@sqliteai/sqlite-sync-linux-x86_64-musl": ["@sqliteai/sqlite-sync-linux-x86_64-musl@0.8.68", "", { "os": "linux", "cpu": [ "x64", "ia32", ] }, "sha512-xW1/1T02Cebh7BZAfsiG4+P1R/ASICKbz78RW9SNp+rs3vXyCJktj8AqJaOnDMyHZ21ZZdEG7vaL8z3WvtQyYw=="],
+    "@sqliteai/sqlite-sync-linux-x86_64-musl": ["@sqliteai/sqlite-sync-linux-x86_64-musl@1.0.0", "", { "os": "linux", "cpu": [ "x64", "ia32", ] }, "sha512-a7HLEVfLFzn35aZadwT6fFVLZ2FT4bCNZKczDuCZfLY478GQgAnDVtVuMEoNVt+kR8vD77eAi8O7iVinKrKj+w=="],
 
-    "@sqliteai/sqlite-sync-win32-x86_64": ["@sqliteai/sqlite-sync-win32-x86_64@0.8.68", "", { "os": "win32", "cpu": [ "x64", "ia32", ] }, "sha512-ArWgVbCc79KwYAHeU/I3ZE9VU3Ev4WFyfPHruVhro+9gniLDCZDQ89faBjPXcITZlQoxfsVeVvaO6C3M3952Sg=="],
+    "@sqliteai/sqlite-sync-win32-x86_64": ["@sqliteai/sqlite-sync-win32-x86_64@1.0.0", "", { "os": "win32", "cpu": [ "x64", "ia32", ] }, "sha512-7vikMkwuHqRsGFlmm2ICFZaxbkOby5+ec1jfCbOgbRkZoD0EtyHacQBATrT8LebtpXLOa8Kr2FONYPSKgVyAGQ=="],
 
     "@types/diff-match-patch": ["@types/diff-match-patch@1.0.36", "", {}, "sha512-xFdR6tkm0MWvBfO8xXCSsinYxHcqkQUlcHeSpMC2ukzOb6lwQAfDmW+Qt0AvlGd8HpsS28qKsB+oPeJn9I39jg=="],
 
