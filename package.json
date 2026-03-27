@@ -18,7 +18,7 @@
   },
   "dependencies": {
     "@ai-sdk/anthropic": "^1.0.0",
-    "@modelcontextprotocol/sdk": "^1.27.1",
+    "@modelcontextprotocol/sdk": "^1.28.0",
     "@sqliteai/sqlite-ai": "^1.0.2",
     "@sqliteai/sqlite-sync": "^0.8.68",
     "cron-parser": "^5.5.0",
