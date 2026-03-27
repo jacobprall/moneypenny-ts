@@ -15,6 +15,7 @@ import { registerKnowledgeOperations } from "../modules/knowledge";
 import { registerFactsOperations } from "../modules/facts";
 import { registerJobsOperations, startScheduler } from "../modules/jobs";
 import { registerEmbedderOperations } from "../modules/embedder";
+import { registerSessionOperations } from "../modules/session";
 import { registerPolicyOperations } from "../modules/policy";
 import { registerHooksOperations } from "../modules/hooks";
 import { registerOperations } from "../modules/operations";
@@ -24,6 +25,7 @@ export async function runMcpServer(): Promise<void> {
   registerKnowledgeOperations();
   registerFactsOperations();
   registerEmbedderOperations();
+  registerSessionOperations();
   registerJobsOperations();
   registerPolicyOperations();
   registerHooksOperations();
@@ -129,6 +131,18 @@ export async function runMcpServer(): Promise<void> {
       description: "Create, list, pause, and resume scheduled jobs.",
       actionDescribe: "create | list | pause | resume",
       opMap: { create: "jobs.create", list: "jobs.list", pause: "jobs.pause", resume: "jobs.resume" },
+    },
+    getDb,
+    actor
+  );
+
+  registerOperationTool(
+    server,
+    {
+      name: "brainstorm_session",
+      description: "Create and run sessions — LLM chat loop.",
+      actionDescribe: "create | run | get",
+      opMap: { create: "session.create", run: "session.run", get: "session.get" },
     },
     getDb,
     actor

@@ -15,6 +15,7 @@ import { registerKnowledgeOperations } from "./modules/knowledge";
 import { registerFactsOperations } from "./modules/facts";
 import { registerJobsOperations } from "./modules/jobs";
 import { registerEmbedderOperations } from "./modules/embedder";
+import { registerSessionOperations } from "./modules/session";
 import { registerPolicyOperations } from "./modules/policy";
 import { registerHooksOperations } from "./modules/hooks";
 import { registerOperations } from "./modules/operations";
@@ -24,6 +25,7 @@ import { registerActivityOperations } from "./modules/activity";
 registerKnowledgeOperations();
 registerFactsOperations();
 registerEmbedderOperations();
+registerSessionOperations();
 registerJobsOperations();
 registerPolicyOperations();
 registerHooksOperations();
@@ -39,6 +41,13 @@ async function getCliContext(): Promise<{ config: BrainConfig; db: Database }> {
 const DEFAULT_BRAIN_TOML = `# Brains config
 # deny_by_default = false  # Set true for production
 # data_dir = "./data"
+
+# LLM (Phase 1)
+# [model]
+# default = "anthropic/claude-sonnet-4-20250514"
+
+# [provider.anthropic]
+# api_key_env = "ANTHROPIC_API_KEY"
 `;
 
 async function cmdInit(args: string[]) {
@@ -181,6 +190,47 @@ async function cmdAddFact(args: string[]) {
   console.log("Added:", result.id);
 }
 
+async function cmdSession(args: string[]) {
+  const sub = args[0] ?? "help";
+  const { db } = await getCliContext();
+
+  if (sub === "create") {
+    const result = (await execute("session.create", {}, { db, actor: "cli" })) as { id: string };
+    console.log(result.id);
+    return;
+  }
+  if (sub === "run" && args[1] && args[2]) {
+    const sessionId = args[1];
+    const message = args.slice(2).join(" ");
+    const config = await loadConfig();
+    const { runLoop } = await import("./session/prompt");
+    try {
+      await runLoop({
+        db,
+        sessionId,
+        config,
+        userMessage: message,
+        onTextDelta: (t: string) => process.stdout.write(t),
+      });
+      console.log(); // newline after stream
+    } catch (e) {
+      console.error(e);
+      process.exit(1);
+    }
+    process.exit(0); // avoid Metal/GGML crash on sqlite-ai teardown
+  }
+  if (sub === "get" && args[1]) {
+    const result = (await execute("session.get", { id: args[1] }, { db, actor: "cli" })) as {
+      session: unknown;
+      messages: unknown[];
+    };
+    console.log(JSON.stringify(result, null, 2));
+    return;
+  }
+
+  console.log(`Usage: brainstorm session create | run <sessionId> <message> | get <sessionId>`);
+}
+
 async function cmdSearch(args: string[]) {
   const query = args.join(" ").trim();
   if (!query) {
@@ -219,6 +269,9 @@ async function main() {
     case "add-fact":
       await cmdAddFact(rest);
       break;
+    case "session":
+      await cmdSession(rest);
+      break;
     case "search":
       await cmdSearch(rest);
       break;
@@ -237,7 +290,8 @@ Commands:
   policy add <f>  Add policy from JSON file
   policy disable <id>
   add-fact "..."  Quick fact entry
-  search "..."    Quick search
+  session        create | run <id> <msg> | get <id>
+  search "..."   Quick search
 `);
   }
 }

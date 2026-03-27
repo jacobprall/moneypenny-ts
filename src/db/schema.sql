@@ -176,6 +176,56 @@ CREATE INDEX IF NOT EXISTS idx_job_runs_job ON job_runs(job_id);
 CREATE INDEX IF NOT EXISTS idx_documents_source_type ON documents(source_type);
 CREATE INDEX IF NOT EXISTS idx_documents_context ON documents(context);
 
+-- Sessions (Phase 1: Session Runtime)
+CREATE TABLE IF NOT EXISTS sessions (
+  id TEXT PRIMARY KEY,
+  parent_id TEXT REFERENCES sessions(id),
+  project_id TEXT,
+  directory TEXT,
+  title TEXT,
+  summary TEXT,
+  agent TEXT NOT NULL DEFAULT 'build',
+  mode TEXT NOT NULL DEFAULT 'foreground',
+  status TEXT NOT NULL DEFAULT 'idle',
+  model_provider TEXT,
+  model_id TEXT,
+  permission TEXT,
+  created_at INTEGER NOT NULL,
+  updated_at INTEGER NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS messages (
+  id TEXT PRIMARY KEY,
+  session_id TEXT NOT NULL REFERENCES sessions(id),
+  role TEXT NOT NULL,
+  agent TEXT,
+  model TEXT,
+  tokens_input INTEGER DEFAULT 0,
+  tokens_output INTEGER DEFAULT 0,
+  finish TEXT,
+  error TEXT,
+  summary TEXT,
+  created_at INTEGER NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS parts (
+  id TEXT PRIMARY KEY,
+  message_id TEXT NOT NULL REFERENCES messages(id),
+  session_id TEXT NOT NULL,
+  type TEXT NOT NULL,
+  text TEXT,
+  tool TEXT,
+  tool_call_id TEXT,
+  state TEXT,
+  metadata TEXT,
+  created_at INTEGER NOT NULL
+);
+
+CREATE INDEX IF NOT EXISTS idx_messages_session ON messages(session_id);
+CREATE INDEX IF NOT EXISTS idx_parts_message ON parts(message_id);
+CREATE INDEX IF NOT EXISTS idx_parts_session ON parts(session_id);
+CREATE INDEX IF NOT EXISTS idx_sessions_status ON sessions(status);
+
 -- Built-in embedder job (runs every 5 min)
 INSERT OR IGNORE INTO jobs (id, name, description, schedule, operation, payload, next_run_at, last_run_at, overlap_policy, max_retries, timeout_ms, status, enabled, created_at, updated_at)
 VALUES (

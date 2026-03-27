@@ -14,6 +14,7 @@
     "brainstorm": "bun run src/cli.ts"
   },
   "dependencies": {
+    "@ai-sdk/anthropic": "^1.0.0",
     "@modelcontextprotocol/sdk": "^1.27.1",
     "@sqliteai/sqlite-ai": "^1.0.2",
     "@sqliteai/sqlite-sync": "^0.8.68",
@@ -21,6 +22,7 @@
     "hono": "^4.12.8",
     "linkedom": "^0.18.12",
     "toml": "^3.0.0",
+    "ai": "^4.0.0",
     "turndown": "^7.2.2",
     "zod": "^4.3.6"
   },
