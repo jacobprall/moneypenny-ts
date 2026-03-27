@@ -63,8 +63,15 @@ Stdio MCP server registers tools as **`mp_*`** with legacy **`brainstorm_*`** al
 - Steps: install → brain `typecheck` + `test` → `packages/opencode-plugin` install + `typecheck` + `test`.
 - Runs on push/PR to `main` and `master`, and manual **workflow_dispatch**.
 - Dependabot: [`.github/dependabot.yml`](.github/dependabot.yml) (weekly Actions + Bun).
+- Release automation: [`.github/workflows/release.yml`](.github/workflows/release.yml) (tag `v*` → verify + artifacts + GitHub release; optional npm publish for plugin when `NPM_TOKEN` exists).
 
 After the repo is on GitHub, you can swap the badge for the live workflow status image from the Actions tab.
+
+## Contribution hygiene
+
+- PR template: [`.github/PULL_REQUEST_TEMPLATE.md`](.github/PULL_REQUEST_TEMPLATE.md)
+- Issue templates: [`.github/ISSUE_TEMPLATE`](.github/ISSUE_TEMPLATE)
+- Ownership rules: [`.github/CODEOWNERS`](.github/CODEOWNERS) (currently `@jacobprall`; adjust if needed)
 
 ## Testing strategy
 

@@ -1,0 +1,14 @@
+# Default ownership
+* @jacobprall
+
+# CI and automation
+.github/* @jacobprall
+.github/workflows/* @jacobprall
+
+# Core brain runtime
+src/* @jacobprall
+scripts/* @jacobprall
+test/* @jacobprall
+
+# OpenCode plugin package
+packages/opencode-plugin/* @jacobprall
