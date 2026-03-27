@@ -4,7 +4,7 @@ import { execute } from "../../core/operations";
 import * as repo from "./repository";
 
 function nextRunFromCron(schedule: string): number {
-  const interval = cronParser.parseExpression(schedule);
+  const interval = cronParser.parse(schedule);
   return interval.next().toDate().getTime();
 }
 

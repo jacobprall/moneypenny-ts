@@ -1,0 +1,51 @@
+# Continuous integration — typecheck + behavior tests for brain and OpenCode plugin.
+# Requires: repository root = this folder (moneypenny-brain).
+
+name: CI
+
+permissions:
+  contents: read
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+  workflow_dispatch:
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+env:
+  FORCE_COLOR: 1
+
+jobs:
+  verify:
+    name: Typecheck & tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: 1.2.19
+
+      - name: Brain — install
+        run: bun install --frozen-lockfile
+
+      - name: Brain — typecheck
+        run: bun run typecheck
+
+      - name: Brain — tests
+        run: bun run test
+
+      - name: OpenCode plugin — install, typecheck, test
+        working-directory: packages/opencode-plugin
+        run: |
+          bun install --frozen-lockfile
+          bun run typecheck
+          bun test

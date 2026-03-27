@@ -1,4 +1,4 @@
-import type { Database } from "bun:sqlite";
+import type { Database, SQLQueryBindings } from "bun:sqlite";
 
 export interface Job {
   id: string;
@@ -165,5 +165,5 @@ export function updateRun(db: Database, id: string, updates: Partial<JobRun>): v
   }
   if (sets.length === 0) return;
   vals.push(id);
-  db.run(`UPDATE job_runs SET ${sets.join(", ")} WHERE id = ?`, vals);
+  db.run(`UPDATE job_runs SET ${sets.join(", ")} WHERE id = ?`, vals as SQLQueryBindings[]);
 }

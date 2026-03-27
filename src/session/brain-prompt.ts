@@ -6,14 +6,17 @@ import type { Database } from "bun:sqlite";
 import { retrieve } from "../retrieval/engine";
 
 const DEFAULT_LIMIT = 5;
-const MAX_CONTEXT_CHARS = 2000;
+const DEFAULT_MAX_CONTEXT_CHARS = 2000;
 
 export async function context(
   db: Database,
   _sessionId: string,
-  userMessage: string
+  userMessage: string,
+  opts?: { limit?: number; maxChars?: number }
 ): Promise<string> {
-  const results = await retrieve(db, userMessage, { limit: DEFAULT_LIMIT });
+  const limit = opts?.limit ?? DEFAULT_LIMIT;
+  const maxChars = opts?.maxChars ?? DEFAULT_MAX_CONTEXT_CHARS;
+  const results = await retrieve(db, userMessage, { limit });
   if (results.length === 0) return "";
 
   const lines: string[] = ["<brain>", "Relevant context from the brain:"];
@@ -22,7 +25,7 @@ export async function context(
     const snippet = r.content.slice(0, 400).replace(/\n/g, " ");
     lines.push(`- ${snippet}${r.content.length > 400 ? "..." : ""}`);
     total += snippet.length + 4;
-    if (total >= MAX_CONTEXT_CHARS) break;
+    if (total >= maxChars) break;
   }
   lines.push("</brain>");
   return lines.join("\n");

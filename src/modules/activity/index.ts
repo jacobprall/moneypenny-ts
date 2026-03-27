@@ -1,8 +1,9 @@
 import { register } from "../../core/operations";
-import { query } from "./operations";
+import { query, append } from "./operations";
 
-export { query } from "./operations";
+export { query, append } from "./operations";
 
 export function registerActivityOperations(): void {
   register(query);
+  register(append);
 }

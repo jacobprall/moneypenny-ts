@@ -52,3 +52,16 @@ export function registerOperationTool(
     }
   );
 }
+
+/** Register the same operation tool under multiple MCP names (e.g. `mp_*` + legacy `brainstorm_*`). */
+export function registerOperationToolAliases(
+  server: McpServer,
+  names: string[],
+  options: Omit<Parameters<typeof registerOperationTool>[1], "name">,
+  getDb: () => Database | null,
+  actor: string
+): void {
+  for (const name of names) {
+    registerOperationTool(server, { ...options, name }, getDb, actor);
+  }
+}

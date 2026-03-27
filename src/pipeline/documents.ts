@@ -2,7 +2,7 @@
  * Document and chunk repository — CRUD for documents/chunks tables.
  */
 
-import type { Database } from "bun:sqlite";
+import type { Database, SQLQueryBindings } from "bun:sqlite";
 import type { Chunk } from "./chunking/types";
 
 export interface DocumentRow {
@@ -124,7 +124,7 @@ export function listDocuments(
   }
   sql += " ORDER BY created_at DESC LIMIT ?";
   params.push(limit);
-  return db.query(sql).all(...params) as DocumentRow[];
+  return db.query(sql).all(...(params as SQLQueryBindings[])) as DocumentRow[];
 }
 
 export function getDocumentByContext(db: Database, context: string): DocumentRow | null {

@@ -18,8 +18,7 @@ export interface ToolContext {
 export type ToolDef = ReturnType<typeof tool>;
 
 export function createBrainTools(ctx: ToolContext): Record<string, ToolDef> {
-  return {
-    brain_search: tool({
+  const brainSearch = tool({
       description:
         "Search the brain's knowledge base and facts. Use when you need to recall stored information, project context, or prior decisions.",
       parameters: z.object({
@@ -43,9 +42,9 @@ export function createBrainTools(ctx: ToolContext): Record<string, ToolDef> {
             .join("\n\n"),
         };
       },
-    }),
+    });
 
-    brain_remember: tool({
+  const brainRemember = tool({
       description:
         "Store a fact in the brain for future sessions. Use for decisions, preferences, or context the user wants remembered.",
       parameters: z.object({
@@ -64,6 +63,10 @@ export function createBrainTools(ctx: ToolContext): Record<string, ToolDef> {
         );
         return { output: `Remembered: ${(result as { id: string }).id}` };
       },
-    }),
+    });
+
+  return {
+    brain_search: brainSearch as unknown as ToolDef,
+    brain_remember: brainRemember as unknown as ToolDef,
   };
 }

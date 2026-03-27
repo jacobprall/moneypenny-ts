@@ -3,6 +3,7 @@
  */
 
 import type { Database } from "bun:sqlite";
+import type { CoreTool } from "ai";
 import { createBrainTools } from "../tool/registry";
 import { createSkillTool } from "../tool/skill";
 import { discoverSkills } from "../skill";
@@ -23,13 +24,13 @@ export async function resolveTools(input: ResolveToolsInput) {
     actor: input.actor,
   };
 
-  const tools: Record<string, ReturnType<typeof createBrainTools>[string]> = {
+  const tools = {
     ...createBrainTools(ctx),
-  };
+  } as Record<string, CoreTool>;
 
   const skills = await discoverSkills();
   if (skills.length > 0) {
-    tools.skill = createSkillTool();
+    tools.skill = createSkillTool() as CoreTool;
   }
 
   return tools;

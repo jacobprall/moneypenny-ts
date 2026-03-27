@@ -2,7 +2,7 @@
  * Session CRUD — sessions, messages, parts.
  */
 
-import type { Database } from "bun:sqlite";
+import type { Database, SQLQueryBindings } from "bun:sqlite";
 
 export interface Session {
   id: string;
@@ -156,7 +156,13 @@ export function insertPart(
   messageId: string,
   sessionId: string,
   type: string,
-  data: { text?: string; tool?: string; toolCallId?: string; state?: string; metadata?: string } = {}
+  data: {
+    text?: string;
+    tool?: string;
+    toolCallId?: string;
+    state?: unknown;
+    metadata?: unknown;
+  } = {}
 ): Part {
   const id = crypto.randomUUID();
   const now = Date.now();
@@ -225,7 +231,7 @@ export function updateMessageFinish(
     vals.push(tokensOutput);
   }
   vals.push(messageId);
-  db.run(`UPDATE messages SET ${updates.join(", ")} WHERE id = ?`, vals);
+  db.run(`UPDATE messages SET ${updates.join(", ")} WHERE id = ?`, vals as SQLQueryBindings[]);
 }
 
 function toSession(row: Record<string, unknown>): Session {

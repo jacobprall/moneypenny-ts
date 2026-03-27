@@ -44,7 +44,7 @@ export function startScheduler(db: Database, intervalMs = 60_000): () => void {
           result: JSON.stringify(result),
         });
         repo.updateLastRun(db, job.id, endedAt);
-        repo.updateNextRun(db, job.id, cronParser.parseExpression(job.schedule).next().toDate().getTime());
+        repo.updateNextRun(db, job.id, cronParser.parse(job.schedule).next().toDate().getTime());
       } catch (err) {
         const endedAt = Date.now();
         const errorMsg = err instanceof Error ? err.message : String(err);
@@ -54,7 +54,7 @@ export function startScheduler(db: Database, intervalMs = 60_000): () => void {
           error: errorMsg,
         });
         repo.updateLastRun(db, job.id, endedAt);
-        repo.updateNextRun(db, job.id, cronParser.parseExpression(job.schedule).next().toDate().getTime());
+        repo.updateNextRun(db, job.id, cronParser.parse(job.schedule).next().toDate().getTime());
       }
     }
   };

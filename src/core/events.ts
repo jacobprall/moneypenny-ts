@@ -1,4 +1,4 @@
-import type { Database } from "bun:sqlite";
+import type { Database, SQLQueryBindings } from "bun:sqlite";
 
 export interface NewEvent {
   id: string;
@@ -71,6 +71,6 @@ export function query(db: Database, filters: EventFilters = {}): Event[] {
   params.push(limit);
   const sql = `SELECT id, operation, actor, session_id as sessionId, input, output, error, duration_ms as durationMs, created_at as createdAt
                FROM events ${where} ORDER BY created_at DESC LIMIT ?`;
-  const rows = db.query(sql).all(...params) as Event[];
+  const rows = db.query(sql).all(...(params as SQLQueryBindings[])) as Event[];
   return rows;
 }

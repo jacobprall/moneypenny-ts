@@ -1,6 +1,6 @@
 #!/usr/bin/env bun
 /**
- * brainstorm CLI — init, setup, serve, status, sync, policy, add-fact, search
+ * mp — Moneypenny brain CLI — init, setup, serve, status, sync, policy, add-fact, search
  */
 
 import { join, resolve } from "path";
@@ -11,26 +11,9 @@ import { loadConfig } from "./core/config";
 import type { BrainConfig } from "./core/config";
 import { getSyncStatus, runCloudSync, setSyncConfig, getSyncConfig } from "./db";
 import { execute } from "./core/operations";
-import { registerKnowledgeOperations } from "./modules/knowledge";
-import { registerFactsOperations } from "./modules/facts";
-import { registerJobsOperations } from "./modules/jobs";
-import { registerEmbedderOperations } from "./modules/embedder";
-import { registerSessionOperations } from "./modules/session";
-import { registerPolicyOperations } from "./modules/policy";
-import { registerHooksOperations } from "./modules/hooks";
-import { registerOperations } from "./modules/operations";
-import { registerActivityOperations } from "./modules/activity";
+import { registerAllOperations } from "./register-operations";
 
-// Register all operations for CLI use
-registerKnowledgeOperations();
-registerFactsOperations();
-registerEmbedderOperations();
-registerSessionOperations();
-registerJobsOperations();
-registerPolicyOperations();
-registerHooksOperations();
-registerOperations();
-registerActivityOperations();
+registerAllOperations();
 
 async function getCliContext(): Promise<{ config: BrainConfig; db: Database }> {
   const config = await loadConfig();
@@ -38,7 +21,7 @@ async function getCliContext(): Promise<{ config: BrainConfig; db: Database }> {
   return { config, db };
 }
 
-const DEFAULT_BRAIN_TOML = `# Brains config
+const DEFAULT_BRAIN_TOML = `# Moneypenny brain config
 # deny_by_default = false  # Set true for production
 # data_dir = "./data"
 
@@ -99,8 +82,8 @@ async function cmdStatus() {
   const policyCount = (db.query("SELECT COUNT(*) as c FROM policies WHERE enabled = 1").get() as { c: number })?.c ?? 0;
   const documentCount = (db.query("SELECT COUNT(*) as c FROM documents WHERE status = 'active'").get() as { c: number })?.c ?? 0;
 
-  console.log("Brains status");
-  console.log("-------------");
+  console.log("Moneypenny brain status");
+  console.log("-----------------------");
   console.log(`Config: ${config.configPath ?? "default"}`);
   console.log(`Data:   ${config.dataDir}`);
   console.log(`Sync:   ${syncStatus.available ? "enabled" : "disabled"}`);
@@ -124,7 +107,7 @@ async function cmdSync(args: string[]) {
   if (sub === "set-interval" && args[1]) {
     const ms = parseInt(args[1], 10);
     if (isNaN(ms)) {
-      console.log("Usage: brainstorm sync set-interval <ms>");
+      console.log("Usage: mp sync set-interval <ms>");
       return;
     }
     setSyncConfig(db, "interval_ms", String(ms));
@@ -133,7 +116,7 @@ async function cmdSync(args: string[]) {
   }
   const syncConfig = getSyncConfig(db);
   if (!syncConfig.cloudUrl) {
-    console.log("No cloud URL configured. Run: brainstorm sync set-url <url>");
+    console.log("No cloud URL configured. Run: mp sync set-url <url>");
     return;
   }
   const result = await runCloudSync(db, syncConfig.cloudUrl);
@@ -175,14 +158,14 @@ async function cmdPolicy(args: string[]) {
     await execute("policy.disable", { id: args[1] }, { db, actor: "cli" });
     console.log("Disabled");
   } else {
-    console.log("Usage: brainstorm policy list | add <file> | disable <id>");
+    console.log("Usage: mp policy list | add <file> | disable <id>");
   }
 }
 
 async function cmdAddFact(args: string[]) {
   const content = args.join(" ").trim();
   if (!content) {
-    console.log("Usage: brainstorm add-fact \"your fact here\"");
+    console.log("Usage: mp add-fact \"your fact here\"");
     return;
   }
   const { db } = await getCliContext();
@@ -228,13 +211,13 @@ async function cmdSession(args: string[]) {
     return;
   }
 
-  console.log(`Usage: brainstorm session create | run <sessionId> <message> | get <sessionId>`);
+  console.log(`Usage: mp session create | run <sessionId> <message> | get <sessionId>`);
 }
 
 async function cmdSearch(args: string[]) {
   const query = args.join(" ").trim();
   if (!query) {
-    console.log("Usage: brainstorm search \"your query\"");
+    console.log("Usage: mp search \"your query\"");
     return;
   }
   const { db } = await getCliContext();
@@ -277,8 +260,8 @@ async function main() {
       break;
     case "help":
     default:
-      console.log(`brainstorm — Brains CLI
-Usage: brainstorm <command> [args]
+      console.log(`mp — Moneypenny brain CLI
+Usage: mp <command> [args]
 
 Commands:
   init [path]     Create brain.toml + data dir

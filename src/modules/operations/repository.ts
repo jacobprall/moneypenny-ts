@@ -1,4 +1,4 @@
-import type { Database } from "bun:sqlite";
+import type { Database, SQLQueryBindings } from "bun:sqlite";
 
 export interface OperationScript {
   id: string;
@@ -46,7 +46,7 @@ export function list(db: Database, options?: { enabledOnly?: boolean }): Operati
     sql += " WHERE enabled = 1";
   }
   sql += " ORDER BY name";
-  return db.query(sql).all(...params) as OperationScript[];
+  return db.query(sql).all(...(params as SQLQueryBindings[])) as OperationScript[];
 }
 
 export function getByName(db: Database, name: string): OperationScript | null {

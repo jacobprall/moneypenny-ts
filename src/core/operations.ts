@@ -177,7 +177,7 @@ export async function execute<TInput = unknown, TOutput = unknown>(
   const start = Date.now();
   let output: TOutput;
   try {
-    output = await runOperation(op, ctx, currentInput);
+    output = await runOperation(op as Operation<TInput, TOutput>, ctx, currentInput);
   } catch (e) {
     const error = e instanceof Error ? e.message : String(e);
     appendEvent(

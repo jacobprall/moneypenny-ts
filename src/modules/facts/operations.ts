@@ -42,11 +42,10 @@ export interface SearchOutput {
 export const search = {
   name: "facts.search",
   async execute(ctx: OperationContext, input: SearchInput): Promise<SearchOutput> {
-    const out = await execute("knowledge.search", input, {
+    return execute<SearchInput, SearchOutput>("knowledge.search", input, {
       db: ctx.db,
       actor: ctx.actor,
       sessionId: ctx.sessionId,
     });
-    return out;
   },
 };

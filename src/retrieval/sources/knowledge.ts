@@ -59,8 +59,7 @@ export function createKnowledgeSource(db: Database) {
             .query(
               `SELECT c.id, c.content, v.distance
                FROM chunks c
-               JOIN vector_full_scan('chunks', 'content_embedding', ?, ?) AS v ON c.rowid = v.rowid`,
-              [queryBlob, limit]
+               JOIN vector_full_scan('chunks', 'content_embedding', ?, ?) AS v ON c.rowid = v.rowid`
             )
             .all(queryBlob, limit) as Array<{ id: string; content: string; distance: number }>;
 
@@ -78,8 +77,7 @@ export function createKnowledgeSource(db: Database) {
             .query(
               `SELECT c.id, c.content, v.distance
                FROM chunks c
-               JOIN vector_full_scan('chunks', 'content_embedding', ?, ?) AS v ON c.rowid = v.rowid`,
-              [queryBlob, limit]
+               JOIN vector_full_scan('chunks', 'content_embedding', ?, ?) AS v ON c.rowid = v.rowid`
             )
             .all(queryBlob, limit) as Array<{ id: string; content: string; distance: number }>;
 

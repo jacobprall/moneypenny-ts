@@ -1,4 +1,4 @@
-import type { Database } from "bun:sqlite";
+import type { Database, SQLQueryBindings } from "bun:sqlite";
 
 export interface Policy {
   id: string;
@@ -55,7 +55,7 @@ export function list(db: Database, options?: { enabledOnly?: boolean }): Policy[
     sql += " WHERE enabled = 1";
   }
   sql += " ORDER BY priority DESC, created_at ASC";
-  return db.query(sql).all(...params) as Policy[];
+  return db.query(sql).all(...(params as SQLQueryBindings[])) as Policy[];
 }
 
 export function getById(db: Database, id: string): Policy | null {

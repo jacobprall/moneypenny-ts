@@ -27,40 +27,51 @@ export async function process(input: ProcessInput): Promise<ProcessResult> {
   const recentToolCalls: Array<{ tool: string; args: string }> = [];
   let blocked = false;
 
-  for await (const chunk of stream.fullStream) {
+  for await (const raw of stream.fullStream) {
+    // Stream chunk shapes vary by AI SDK version; treat as a loose record per branch.
+    const chunk = raw as Record<string, unknown> & { type: string };
     switch (chunk.type) {
       case "text-delta":
         if (!textPartId) {
           const part = Session.insertPart(db, assistantMessageId, sessionId, "text", { text: "" });
           textPartId = part.id;
         }
-        textBuffer += chunk.textDelta;
-        Session.updatePartText(db, textPartId, textBuffer);
-        onTextDelta?.(chunk.textDelta);
+        {
+          const delta = String(chunk.textDelta ?? "");
+          textBuffer += delta;
+          Session.updatePartText(db, textPartId, textBuffer);
+          onTextDelta?.(delta);
+        }
         break;
 
       case "reasoning":
-        if (chunk.textDelta) {
-          Session.insertPart(db, assistantMessageId, sessionId, "reasoning", {
-            text: chunk.textDelta,
-            metadata: JSON.stringify(chunk),
-          });
+        {
+          const delta = chunk.textDelta;
+          if (delta) {
+            Session.insertPart(db, assistantMessageId, sessionId, "reasoning", {
+              text: String(delta),
+              metadata: JSON.stringify(chunk),
+            });
+          }
         }
         break;
 
       case "tool-call-streaming-start":
-        if (!(chunk.toolCallId in toolParts)) {
-          const part = Session.insertPart(db, assistantMessageId, sessionId, "tool", {
-            tool: chunk.toolName,
-            toolCallId: chunk.toolCallId,
-            state: { status: "pending", input: {} },
-          });
-          toolParts[chunk.toolCallId] = part.id;
+        {
+          const toolCallId = String(chunk.toolCallId ?? "");
+          if (toolCallId && !(toolCallId in toolParts)) {
+            const part = Session.insertPart(db, assistantMessageId, sessionId, "tool", {
+              tool: String(chunk.toolName ?? ""),
+              toolCallId,
+              state: { status: "pending", input: {} },
+            });
+            toolParts[toolCallId] = part.id;
+          }
         }
         break;
 
       case "tool-call": {
-        const tc = chunk as { toolCallId: string; toolName: string; args?: unknown };
+        const tc = chunk as unknown as { toolCallId: string; toolName: string; args?: unknown };
         if (tc.toolCallId in toolParts) {
           const partId = toolParts[tc.toolCallId];
           const argsStr = JSON.stringify(tc.args ?? {});
@@ -68,7 +79,7 @@ export async function process(input: ProcessInput): Promise<ProcessResult> {
           const lastThree = recentToolCalls.slice(-DOOM_LOOP_THRESHOLD);
           if (
             lastThree.length === DOOM_LOOP_THRESHOLD &&
-            lastThree.every((t) => t.tool === tc.toolName && t.args === argsStr)
+            lastThree.every((c) => c.tool === tc.toolName && c.args === argsStr)
           ) {
             blocked = true;
           }
@@ -81,7 +92,7 @@ export async function process(input: ProcessInput): Promise<ProcessResult> {
       }
 
       case "tool-result": {
-        const tr = chunk as { toolCallId: string; result?: unknown };
+        const tr = chunk as unknown as { toolCallId: string; result?: unknown };
         if (tr.toolCallId in toolParts) {
           const partId = toolParts[tr.toolCallId];
           const output = tr.result;
@@ -94,19 +105,24 @@ export async function process(input: ProcessInput): Promise<ProcessResult> {
         break;
       }
 
-      case "finish":
+      case "finish": {
+        const usage = chunk.usage as { promptTokens?: number; completionTokens?: number } | undefined;
+        const finishReason = String(chunk.finishReason ?? "stop");
         Session.updateMessageFinish(
           db,
           assistantMessageId,
-          chunk.finishReason,
-          chunk.usage?.promptTokens,
-          chunk.usage?.completionTokens
+          finishReason,
+          usage?.promptTokens,
+          usage?.completionTokens
         );
-        return blocked ? "stop" : chunk.finishReason === "tool-calls" ? "continue" : "stop";
+        return blocked ? "stop" : finishReason === "tool-calls" ? "continue" : "stop";
+      }
 
-      case "error":
+      case "error": {
         Session.updateMessageFinish(db, assistantMessageId, "error");
-        throw chunk.error;
+        const err = chunk.error;
+        throw err instanceof Error ? err : new Error(String(err));
+      }
 
       default:
         break;

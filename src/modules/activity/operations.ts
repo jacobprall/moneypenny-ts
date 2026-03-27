@@ -1,5 +1,5 @@
 import type { OperationContext } from "../../core/context";
-import { query as queryEvents } from "../../core/events";
+import { query as queryEvents, append as appendEvent } from "../../core/events";
 
 export interface QueryInput {
   source?: "events" | "decisions" | "all";
@@ -60,5 +60,43 @@ export const query = {
         createdAt: e.createdAt,
       })),
     };
+  },
+};
+
+export interface AppendInput {
+  operation: string;
+  actor: string;
+  sessionId?: string | null;
+  input?: unknown;
+  output?: unknown;
+  error?: string | null;
+  durationMs?: number | null;
+}
+
+export interface AppendOutput {
+  id: string;
+}
+
+/**
+ * Append a row to the audit `events` table (HTTP API / OpenCode plugin).
+ * Runs through the full execute() pipeline: pre-hooks → policy → execute → post-hooks → audit.
+ * With `deny_by_default`, add policies allowing `activity.append` for actor `http` (and plugin actors).
+ */
+export const append = {
+  name: "activity.append",
+  async execute(ctx: OperationContext, input: AppendInput): Promise<AppendOutput> {
+    const id = crypto.randomUUID();
+    appendEvent(ctx.db, {
+      id,
+      operation: input.operation,
+      actor: input.actor,
+      sessionId: input.sessionId ?? undefined,
+      input: input.input ?? {},
+      output: input.output,
+      error: input.error ?? undefined,
+      durationMs: input.durationMs ?? undefined,
+      createdAt: Date.now(),
+    });
+    return { id };
   },
 };

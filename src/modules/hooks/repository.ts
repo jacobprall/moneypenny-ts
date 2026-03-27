@@ -1,4 +1,4 @@
-import type { Database } from "bun:sqlite";
+import type { Database, SQLQueryBindings } from "bun:sqlite";
 
 export interface Hook {
   id: string;
@@ -50,7 +50,7 @@ export function list(db: Database, options?: { phase?: string }): Hook[] {
     params.push(options.phase);
   }
   sql += " ORDER BY phase, priority DESC";
-  return db.query(sql).all(...params) as Hook[];
+  return db.query(sql).all(...(params as SQLQueryBindings[])) as Hook[];
 }
 
 export function setEnabled(db: Database, id: string, enabled: number): void {
