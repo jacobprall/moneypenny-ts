@@ -20,7 +20,7 @@
     "@ai-sdk/anthropic": "^1.0.0",
     "@modelcontextprotocol/sdk": "^1.28.0",
     "@sqliteai/sqlite-ai": "^1.0.2",
-    "@sqliteai/sqlite-sync": "^0.8.68",
+    "@sqliteai/sqlite-sync": "^1.0.0",
     "cron-parser": "^5.5.0",
     "hono": "^4.12.8",
     "linkedom": "^0.18.12",
