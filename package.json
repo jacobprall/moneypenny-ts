@@ -17,7 +17,7 @@
     "mp": "bun run src/cli.ts"
   },
   "dependencies": {
-    "@ai-sdk/anthropic": "^1.0.0",
+    "@ai-sdk/anthropic": "^3.0.66",
     "@modelcontextprotocol/sdk": "^1.28.0",
     "@sqliteai/sqlite-ai": "^1.0.2",
     "@sqliteai/sqlite-sync": "^1.0.0",
